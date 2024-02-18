@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"gerlacdt/gcurl/http"
 )
 
 var rootCmd = &cobra.Command{
@@ -12,8 +14,8 @@ var rootCmd = &cobra.Command{
 	Short: "gcurl is a replacement for curl to make HTTP requests from the CLI",
 	Long:  "gcurl is a replacement for curl to make HTTP requests from the CLI",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Do stuff here
-		fmt.Println("Hello World")
+		url := args[0]
+		http.Get(url)
 	},
 }
 
