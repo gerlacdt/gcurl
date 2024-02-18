@@ -14,8 +14,8 @@ func validateUrl(givenUrl string) error {
 	return err
 }
 
-func Get(url string, verbose bool) (string, error) {
-	err := validateUrl(url)
+func Get(url string, verbose bool) (body string, err error) {
+	err = validateUrl(url)
 	if err != nil {
 		return "", err
 	}
@@ -30,9 +30,9 @@ func Get(url string, verbose bool) (string, error) {
 		return "", err
 	}
 	defer func() {
-		_ = resp.Body.Close()
+		err = resp.Body.Close()
 	}()
-	body, err := io.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
@@ -48,5 +48,6 @@ func Get(url string, verbose bool) (string, error) {
 			fmt.Fprintf(os.Stderr, "%s : %s\n", respHeader, strings.Join(respHeaderValue, ","))
 		}
 	}
-	return string(body), nil
+	body = string(bodyBytes)
+	return
 }

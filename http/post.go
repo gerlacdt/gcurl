@@ -25,8 +25,8 @@ func getHeaderMap(headers []string) (map[string]string, error) {
 	return headerMap, err
 }
 
-func Post(url string, headers []string) (string, error) {
-	err := validateUrl(url)
+func Post(url string, headers []string) (body string, err error) {
+	err = validateUrl(url)
 	if err != nil {
 		return "", err
 	}
@@ -46,11 +46,12 @@ func Post(url string, headers []string) (string, error) {
 		return "", nil
 	}
 	defer func() {
-		_ = resp.Body.Close()
+		err = resp.Body.Close()
 	}()
-	body, err := io.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
-	return string(body), nil
+	body = string(bodyBytes)
+	return
 }
