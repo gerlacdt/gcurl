@@ -1,23 +1,30 @@
 package http
 
 import (
-	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 )
 
-func Get(url string) error {
+func validateUrl(givenUrl string) error {
+	_, err := url.ParseRequestURI(givenUrl)
+	return err
+}
 
+func Get(url string) (string, error) {
+	err := validateUrl(url)
+	if err != nil {
+		return "", err
+	}
 	resp, err := http.Get(url)
 	if err != err {
-		return err
+		return "", err
 	}
 	defer resp.Body.Close()
 	// output to stdout
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return "", err
 	}
-	fmt.Printf("%s", body)
-	return nil
+	return string(body), nil
 }
