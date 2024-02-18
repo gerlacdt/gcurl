@@ -24,7 +24,7 @@ var rootCmd = &cobra.Command{
 		switch method {
 		case "GET":
 			{
-				body, err := http.Get(givenUrl)
+				body, err := http.Get(givenUrl, verbose)
 				if err != nil {
 					fmt.Printf("%s", err)
 					os.Exit(1)
