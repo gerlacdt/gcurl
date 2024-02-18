@@ -11,17 +11,16 @@ func validateUrl(givenUrl string) error {
 	return err
 }
 
-func Get(url string) (string, error) {
+func Get(url string, verbose bool) (string, error) {
 	err := validateUrl(url)
 	if err != nil {
 		return "", err
 	}
 	resp, err := http.Get(url)
-	if err != err {
+	if err != nil {
 		return "", err
 	}
 	defer resp.Body.Close()
-	// output to stdout
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
