@@ -36,18 +36,18 @@ func Post(url string, headers []string) (string, error) {
 		return "", err
 	}
 
-	fmt.Printf("headerMap: %v\n", headerMap)
 	contentType, ok := headerMap["Content-Type"]
 	if !ok {
 		contentType = "application/json" // default to json
 	}
 
-	fmt.Printf("contentType: %s\n", contentType)
 	resp, err := http.Post(url, contentType, os.Stdin)
 	if err != nil {
 		return "", nil
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
