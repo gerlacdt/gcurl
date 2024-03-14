@@ -33,12 +33,12 @@ var rootCmd = &cobra.Command{
 			}
 		case "POST":
 			{
-				body, err := http.Post(givenUrl, headers)
+				response, err := http.Post(givenUrl, headers, os.Stdin)
 				if err != nil {
 					fmt.Printf("%s", err)
 					os.Exit(1)
 				}
-				fmt.Printf("%s", body)
+				response.Print(verbose)
 			}
 		default:
 			{

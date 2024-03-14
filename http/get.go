@@ -30,7 +30,7 @@ func (r *Result) Print(verbose bool) {
 	fmt.Printf("%s", r.Body)
 }
 
-func zeroResponse() Result {
+func zeroResult() Result {
 	m := make(map[string][]string)
 	return Result{make([]byte, 0), m, m}
 }
@@ -43,24 +43,24 @@ func validateUrl(givenUrl string) error {
 func Get(url string, verbose bool) (response Result, err error) {
 	err = validateUrl(url)
 	if err != nil {
-		return zeroResponse(), err
+		return zeroResult(), err
 	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return zeroResponse(), err
+		return zeroResult(), err
 	}
 	req.Header.Add("Accept", "application/json")
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return zeroResponse(), err
+		return zeroResult(), err
 	}
 	defer func() {
 		err = resp.Body.Close()
 	}()
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return zeroResponse(), err
+		return zeroResult(), err
 	}
 
 	response = Result{bodyBytes, resp.Header, req.Header}

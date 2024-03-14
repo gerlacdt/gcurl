@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -25,15 +24,15 @@ func getHeaderMap(headers []string) (map[string]string, error) {
 	return headerMap, err
 }
 
-func Post(url string, headers []string) (body string, err error) {
+func Post(url string, headers []string, reader io.Reader) (result Result, err error) {
 	err = validateUrl(url)
 	if err != nil {
-		return "", err
+		return zeroResult(), err
 	}
 
 	headerMap, err := getHeaderMap(headers)
 	if err != nil {
-		return "", err
+		return zeroResult(), err
 	}
 
 	contentType, ok := headerMap["Content-Type"]
@@ -41,17 +40,26 @@ func Post(url string, headers []string) (body string, err error) {
 		contentType = "application/json" // default to json
 	}
 
-	resp, err := http.Post(url, contentType, os.Stdin)
+	req, err := http.NewRequest("POST", url, reader)
 	if err != nil {
-		return "", nil
+		return zeroResult(), err
+	}
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", contentType)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+
+	// resp, err := http.Post(url, contentType, os.Stdin)
+	if err != nil {
+		return zeroResult(), nil
 	}
 	defer func() {
 		err = resp.Body.Close()
 	}()
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		return zeroResult(), err
 	}
-	body = string(bodyBytes)
-	return
+	result = Result{bodyBytes, resp.Header, req.Header}
+	return result, nil
 }
