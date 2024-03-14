@@ -15,7 +15,8 @@ func TestGet(t *testing.T) {
 		t.Fatalf("http GET failed, %v", err)
 	}
 
-	if !strings.Contains(actual, "User-Agent") {
+	body := string(actual.Body)
+	if !strings.Contains(body, "User-Agent") {
 		t.Fatalf("expected contains User-Agend, got: %s", actual)
 	}
 }
