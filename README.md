@@ -20,4 +20,8 @@ cat files/post_request.json|  ./gcurl -X POST https://reqres.in/api/user
 
 # POST request via redirect
 ./gcurl -X POST https://reqres.in/api/user < files/post_request.json
+
+
+# for test you need to run docker httpbin
+make httpbin
 ```
