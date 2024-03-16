@@ -16,4 +16,4 @@ clean:
 	rm -f ./gcurl
 
 httpbin:
-	docker run -p 8080:80 kennethreitz/httpbin
+	docker run -d -p 8080:80 kennethreitz/httpbin
