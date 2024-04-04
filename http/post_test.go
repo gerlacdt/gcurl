@@ -16,5 +16,6 @@ func TestPost(t *testing.T) {
 		t.Fatalf("http POST failed, %v", err)
 	}
 
+	// TODO add assertions
 	fmt.Printf("%s", actual)
 }
