@@ -60,6 +60,6 @@ func Post(url string, headers []string, reader io.Reader) (result Result, err er
 	if err != nil {
 		return zeroResult(), err
 	}
-	result = Result{bodyBytes, resp.Header, req.Header}
+	result = Result{bodyBytes, resp.Status, resp.Proto, resp.Header, req.Header}
 	return result, nil
 }

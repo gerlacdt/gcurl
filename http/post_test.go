@@ -1,7 +1,6 @@
 package http
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 )
@@ -13,9 +12,17 @@ func TestPost(t *testing.T) {
 	reader := strings.NewReader("\"foo\": \"bar\"")
 	actual, err := Post(url, headers, reader)
 	if err != nil {
-		t.Fatalf("http POST failed, %v", err)
+		t.Errorf("http POST failed, %v", err)
 	}
 
-	// TODO add assertions
-	fmt.Printf("%s", actual)
+	expectedStatusCode := "200"
+	if !strings.Contains(actual.StatusCode, expectedStatusCode) {
+		t.Errorf("expected StatusCode: %s, got: %s", expectedStatusCode, actual.StatusCode)
+	}
+
+	body := string(actual.Body)
+	expectedWord := "foo"
+	if !strings.Contains(body, expectedWord) {
+		t.Errorf("should contain: %s, got: %s", expectedWord, body)
+	}
 }

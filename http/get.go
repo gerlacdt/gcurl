@@ -11,6 +11,8 @@ import (
 
 type Result struct {
 	Body          []byte
+	StatusCode    string
+	Proto         string
 	Header        map[string][]string
 	RequestHeader map[string][]string
 }
@@ -18,6 +20,7 @@ type Result struct {
 func (r *Result) Print(verbose bool) {
 	if verbose {
 		// print request headers
+		fmt.Fprintf(os.Stderr, "%s %s\n", r.Proto, r.StatusCode)
 		for reqHeader, reqHeaderValue := range r.RequestHeader {
 			fmt.Fprintf(os.Stderr, "%s : %s\n", reqHeader, strings.Join(reqHeaderValue, ","))
 		}
@@ -32,7 +35,7 @@ func (r *Result) Print(verbose bool) {
 
 func zeroResult() Result {
 	m := make(map[string][]string)
-	return Result{make([]byte, 0), m, m}
+	return Result{make([]byte, 0), "", "", m, m}
 }
 
 func validateUrl(givenUrl string) error {
@@ -63,6 +66,6 @@ func Get(url string, verbose bool) (response Result, err error) {
 		return zeroResult(), err
 	}
 
-	response = Result{bodyBytes, resp.Header, req.Header}
+	response = Result{bodyBytes, resp.Status, resp.Proto, resp.Header, req.Header}
 	return response, nil
 }

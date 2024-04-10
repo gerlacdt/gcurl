@@ -12,11 +12,20 @@ func TestGet(t *testing.T) {
 
 	actual, err := Get(url, verbose)
 	if err != nil {
-		t.Fatalf("http GET failed, %v", err)
+		t.Errorf("http GET failed, %v", err)
+	}
+
+	expectedStatusCode := "200"
+	if !strings.Contains(actual.StatusCode, expectedStatusCode) {
+		t.Errorf("expected statusCode: %s, got: %s", expectedStatusCode, actual.StatusCode)
 	}
 
 	body := string(actual.Body)
 	if !strings.Contains(body, "User-Agent") {
-		t.Fatalf("expected contains User-Agend, got: %s", actual)
+		t.Errorf("expected User-Agent, got: %v", actual)
+	}
+
+	if !strings.Contains(body, "origin") {
+		t.Errorf("expected origin, got: %v", actual)
 	}
 }
