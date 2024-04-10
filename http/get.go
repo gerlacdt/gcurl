@@ -20,12 +20,12 @@ type Result struct {
 func (r *Result) Print(verbose bool) {
 	if verbose {
 		for reqHeader, reqHeaderValue := range r.RequestHeader {
-			fmt.Fprintf(os.Stderr, "%s : %s\n", reqHeader, strings.Join(reqHeaderValue, ","))
+			fmt.Fprintf(os.Stderr, "> %s : %s\n", reqHeader, strings.Join(reqHeaderValue, ","))
 		}
 		fmt.Fprintf(os.Stderr, "\n")
-		fmt.Fprintf(os.Stderr, "%s %s\n", r.Proto, r.StatusCode)
+		fmt.Fprintf(os.Stderr, "< %s %s\n", r.Proto, r.StatusCode)
 		for respHeader, respHeaderValue := range r.Header {
-			fmt.Fprintf(os.Stderr, "%s : %s\n", respHeader, strings.Join(respHeaderValue, ","))
+			fmt.Fprintf(os.Stderr, "< %s : %s\n", respHeader, strings.Join(respHeaderValue, ","))
 		}
 	}
 	fmt.Printf("%s", r.Body)
