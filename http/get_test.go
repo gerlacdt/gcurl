@@ -9,8 +9,11 @@ func TestGet(t *testing.T) {
 
 	url := "http://localhost:8080/get"
 	verbose := false
+	headers := make([]string, 0)
 
-	actual, err := Get(url, verbose)
+	params := GetParams{Url: url, Verbose: verbose, Headers: headers}
+
+	actual, err := Get(params)
 	if err != nil {
 		t.Errorf("http GET failed, %v", err)
 	}

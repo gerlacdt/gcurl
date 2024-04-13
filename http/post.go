@@ -7,6 +7,13 @@ import (
 	"strings"
 )
 
+type PostParams struct {
+	Url     string
+	Verbose bool
+	Headers []string
+	Reader  io.Reader
+}
+
 func getHeaderMap(headers []string) (map[string]string, error) {
 	headerMap := make(map[string]string)
 	var err error
@@ -32,18 +39,18 @@ func setDefaultHeadersPost(r *http.Request) {
 	r.Header.Set("Content-Type", "application/json")
 }
 
-func Post(url string, headers []string, reader io.Reader) (result Result, err error) {
-	err = validateUrl(url)
+func Post(params PostParams) (result Result, err error) {
+	err = validateUrl(params.Url)
 	if err != nil {
 		return zeroResult(), err
 	}
 
-	headerMap, err := getHeaderMap(headers)
+	headerMap, err := getHeaderMap(params.Headers)
 	if err != nil {
 		return zeroResult(), err
 	}
 
-	req, err := http.NewRequest("POST", url, reader)
+	req, err := http.NewRequest("POST", params.Url, params.Reader)
 	if err != nil {
 		return zeroResult(), err
 	}

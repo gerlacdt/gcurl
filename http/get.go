@@ -9,6 +9,12 @@ import (
 	"strings"
 )
 
+type GetParams struct {
+	Url     string
+	Verbose bool
+	Headers []string
+}
+
 type Result struct {
 	Body          []byte
 	StatusCode    string
@@ -48,12 +54,12 @@ func setDefaultHeaders(r *http.Request) {
 	r.Header.Set("Host", r.Host)
 }
 
-func Get(url string, verbose bool) (response Result, err error) {
-	err = validateUrl(url)
+func Get(params GetParams) (response Result, err error) {
+	err = validateUrl(params.Url)
 	if err != nil {
 		return zeroResult(), err
 	}
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", params.Url, nil)
 	if err != nil {
 		return zeroResult(), err
 	}
