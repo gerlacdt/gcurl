@@ -12,6 +12,7 @@ import (
 var method string
 var headers []string
 var verbose bool
+var body string
 
 var rootCmd = &cobra.Command{
 	Use:   "gcurl",
@@ -33,7 +34,7 @@ var rootCmd = &cobra.Command{
 			}
 		case "POST":
 			{
-				response, err := http.Post(http.PostParams{Url: givenUrl, Verbose: verbose, Headers: headers, Reader: os.Stdin})
+				response, err := http.Post(http.PostParams{Url: givenUrl, Verbose: verbose, Headers: headers, Reader: os.Stdin, Body: body})
 				if err != nil {
 					fmt.Printf("%s", err)
 					os.Exit(1)
@@ -54,6 +55,7 @@ func init() {
 	slice := make([]string, 0)
 	rootCmd.PersistentFlags().StringSliceVarP(&headers, "header", "H", slice, "http header to put in request")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose flag, print out http headers for request and response")
+	rootCmd.PersistentFlags().StringVarP(&body, "data", "d", "", "data used for the HTTP body")
 }
 
 func Execute() {

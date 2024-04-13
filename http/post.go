@@ -12,6 +12,7 @@ type PostParams struct {
 	Verbose bool
 	Headers []string
 	Reader  io.Reader
+	Body    string
 }
 
 func getHeaderMap(headers []string) (map[string]string, error) {
@@ -50,9 +51,18 @@ func Post(params PostParams) (result Result, err error) {
 		return zeroResult(), err
 	}
 
-	req, err := http.NewRequest("POST", params.Url, params.Reader)
-	if err != nil {
-		return zeroResult(), err
+	var req *http.Request
+	if params.Body == "" {
+		req, err = http.NewRequest("POST", params.Url, params.Reader)
+		if err != nil {
+			return zeroResult(), err
+		}
+	} else {
+		bodyReader := strings.NewReader(params.Body)
+		req, err = http.NewRequest("POST", params.Url, bodyReader)
+		if err != nil {
+			return zeroResult(), err
+		}
 	}
 	setDefaultHeadersPost(req)
 	for headerKey, headerValue := range headerMap {
