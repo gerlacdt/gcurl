@@ -12,7 +12,15 @@ import (
 type GetParams struct {
 	Url     string
 	Verbose bool
-	Headers []string
+	Headers map[string]string
+}
+
+func NewGetParams(url string, verbose bool, headers []string) (GetParams, error) {
+	headerMap, err := getHeaderMap(headers)
+	if err != nil {
+		return GetParams{}, err
+	}
+	return GetParams{Url: url, Verbose: verbose, Headers: headerMap}, nil
 }
 
 type Result struct {

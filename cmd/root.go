@@ -25,16 +25,26 @@ var rootCmd = &cobra.Command{
 		switch method {
 		case "GET":
 			{
-				response, err := http.Get(http.GetParams{Url: givenUrl, Verbose: verbose, Headers: headers})
+				params, err := http.NewGetParams(givenUrl, verbose, headers)
 				if err != nil {
-					fmt.Printf("%s", err)
+					fmt.Printf("%s\n", err)
+					os.Exit(1)
+				}
+				response, err := http.Get(params)
+				if err != nil {
+					fmt.Printf("%s\n", err)
 					os.Exit(1)
 				}
 				response.Print(verbose)
 			}
 		case "POST":
 			{
-				response, err := http.Post(http.PostParams{Url: givenUrl, Verbose: verbose, Headers: headers, Reader: os.Stdin, Body: body})
+				params, err := http.NewPostParams(givenUrl, verbose, headers, os.Stdin, body)
+				if err != nil {
+					fmt.Printf("%s\n", err)
+					os.Exit(1)
+				}
+				response, err := http.Post(params)
 				if err != nil {
 					fmt.Printf("%s", err)
 					os.Exit(1)

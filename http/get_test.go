@@ -11,7 +11,10 @@ func TestGet(t *testing.T) {
 	verbose := false
 	headers := make([]string, 0)
 
-	params := GetParams{Url: url, Verbose: verbose, Headers: headers}
+	params, err := NewGetParams(url, verbose, headers)
+	if err != nil {
+		t.Errorf("GetParams creation failed, %v", err)
+	}
 
 	actual, err := Get(params)
 	if err != nil {

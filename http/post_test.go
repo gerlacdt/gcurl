@@ -9,10 +9,12 @@ func TestPost(t *testing.T) {
 	url := "http://localhost:8080/post"
 	verbose := false
 	headers := make([]string, 0)
-
 	reader := strings.NewReader("\"foo\": \"bar\"")
+	params, err := NewPostParams(url, verbose, headers, reader, "")
+	if err != nil {
+		t.Errorf("creatin PostParams failed, %v", err)
+	}
 
-	params := PostParams{Url: url, Verbose: verbose, Headers: headers, Reader: reader}
 	actual, err := Post(params)
 	if err != nil {
 		t.Errorf("http POST failed, %v", err)

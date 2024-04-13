@@ -10,9 +10,17 @@ import (
 type PostParams struct {
 	Url     string
 	Verbose bool
-	Headers []string
+	Headers map[string]string
 	Reader  io.Reader
 	Body    string
+}
+
+func NewPostParams(url string, verbose bool, headers []string, reader io.Reader, body string) (PostParams, error) {
+	headerMap, err := getHeaderMap(headers)
+	if err != nil {
+		return PostParams{}, err
+	}
+	return PostParams{Url: url, Verbose: verbose, Headers: headerMap, Reader: reader, Body: body}, nil
 }
 
 func getHeaderMap(headers []string) (map[string]string, error) {
@@ -46,11 +54,6 @@ func Post(params PostParams) (result Result, err error) {
 		return zeroResult(), err
 	}
 
-	headerMap, err := getHeaderMap(params.Headers)
-	if err != nil {
-		return zeroResult(), err
-	}
-
 	var req *http.Request
 	if params.Body == "" {
 		req, err = http.NewRequest("POST", params.Url, params.Reader)
@@ -65,7 +68,7 @@ func Post(params PostParams) (result Result, err error) {
 		}
 	}
 	setDefaultHeadersPost(req)
-	for headerKey, headerValue := range headerMap {
+	for headerKey, headerValue := range params.Headers {
 		req.Header.Set(headerKey, headerValue)
 	}
 	client := &http.Client{}
