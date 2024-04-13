@@ -72,6 +72,9 @@ func Get(params GetParams) (response Result, err error) {
 		return zeroResult(), err
 	}
 	setDefaultHeaders(req)
+	for headerKey, headerValue := range params.Headers {
+		req.Header.Set(headerKey, headerValue)
+	}
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
