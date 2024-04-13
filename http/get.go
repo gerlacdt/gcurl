@@ -41,6 +41,13 @@ func validateUrl(givenUrl string) error {
 	return err
 }
 
+func setDefaultHeaders(r *http.Request) {
+	r.Header.Set("Accept", "application/json")
+	r.Header.Set("User-Agent", "Go-http-client/1.1")
+	r.Header.Set("Accept-Encoding", "gzip")
+	r.Header.Set("Host", r.Host)
+}
+
 func Get(url string, verbose bool) (response Result, err error) {
 	err = validateUrl(url)
 	if err != nil {
@@ -50,7 +57,7 @@ func Get(url string, verbose bool) (response Result, err error) {
 	if err != nil {
 		return zeroResult(), err
 	}
-	req.Header.Add("Accept", "application/json")
+	setDefaultHeaders(req)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {

@@ -24,6 +24,14 @@ func getHeaderMap(headers []string) (map[string]string, error) {
 	return headerMap, err
 }
 
+func setDefaultHeadersPost(r *http.Request) {
+	r.Header.Set("Accept", "application/json")
+	r.Header.Set("User-Agent", "Go-http-client/1.1")
+	r.Header.Set("Accept-Encoding", "gzip")
+	r.Header.Set("Host", r.Host)
+	r.Header.Set("Content-Type", "application/json")
+}
+
 func Post(url string, headers []string, reader io.Reader) (result Result, err error) {
 	err = validateUrl(url)
 	if err != nil {
@@ -35,17 +43,14 @@ func Post(url string, headers []string, reader io.Reader) (result Result, err er
 		return zeroResult(), err
 	}
 
-	contentType, ok := headerMap["Content-Type"]
-	if !ok {
-		contentType = "application/json" // default to json
-	}
-
 	req, err := http.NewRequest("POST", url, reader)
 	if err != nil {
 		return zeroResult(), err
 	}
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", contentType)
+	setDefaultHeadersPost(req)
+	for headerKey, headerValue := range headerMap {
+		req.Header.Set(headerKey, headerValue)
+	}
 	client := &http.Client{}
 	resp, err := client.Do(req)
 
