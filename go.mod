@@ -2,7 +2,10 @@ module gerlacdt/gcurl
 
 go 1.22.1
 
-require github.com/spf13/cobra v1.8.0
+require (
+	github.com/jarcoal/httpmock v1.3.1
+	github.com/spf13/cobra v1.8.0
+)
 
 require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
