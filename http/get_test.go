@@ -1,11 +1,18 @@
 package http
 
 import (
+	"bytes"
+	"flag"
 	"fmt"
-	"github.com/jarcoal/httpmock"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/jarcoal/httpmock"
 )
+
+var update = flag.Bool("update", false, "update golden files")
 
 func TestGet_validRequest_statusCodeOk(t *testing.T) {
 	url := "http://localhost:8080/get"
@@ -25,27 +32,6 @@ func TestGet_validRequest_statusCodeOk(t *testing.T) {
 	expectedStatusCode := "200"
 	if !strings.Contains(actual.StatusCode, expectedStatusCode) {
 		t.Errorf("expected statusCode: %s, got: %s", expectedStatusCode, actual.StatusCode)
-	}
-}
-
-func TestGet_validRequest_defaultHeaderSet(t *testing.T) {
-	url := "http://localhost:8080/get"
-	verbose := false
-	headers := make([]string, 0)
-
-	params, err := NewGetParams(url, verbose, headers)
-	if err != nil {
-		t.Errorf("GetParams creation failed, %v", err)
-	}
-
-	actual, err := Get(params)
-	if err != nil {
-		t.Errorf("http GET failed, %v", err)
-	}
-
-	body := string(actual.Body)
-	if !strings.Contains(body, "User-Agent") {
-		t.Errorf("expected User-Agent, got: %v", actual)
 	}
 }
 
@@ -95,6 +81,9 @@ func TestGet_validRequest_bodyOk(t *testing.T) {
 	body := string(actual.Body)
 	if !strings.Contains(body, "origin") {
 		t.Errorf("expected origin, got: %v", actual)
+	}
+	if !strings.Contains(body, "User-Agent") {
+		t.Errorf("expected User-Agent, got: %v", actual)
 	}
 }
 
@@ -163,5 +152,40 @@ func TestGet_httpmock_ok(t *testing.T) {
 	body := string(response.Body)
 	if !strings.Contains(body, expectedBody) {
 		t.Errorf("body contains expected: %s, got: %s", expectedBody, body)
+	}
+}
+
+// golden files reference Mitchell Hashimoto slides
+// https://speakerdeck.com/mitchellh/advanced-testing-with-go?slide=20
+func TestGet_goldenFile_ok(t *testing.T) {
+	// arrange
+	url := "http://localhost:8080/get"
+	verbose := false
+	headers := make([]string, 0)
+	params, err := NewGetParams(url, verbose, headers)
+	if err != nil {
+		t.Errorf("GetParams creation failed, %v", err)
+	}
+
+	// act
+	actual, err := Get(params)
+	if err != nil {
+		t.Errorf("http GET failed, %v", err)
+	}
+
+	// assert
+	golden := filepath.Join("test-fixtures", "get_body.golden")
+	if *update {
+		err = os.WriteFile(golden, actual.Body, 0644)
+		if err != nil {
+			t.Errorf("Failed updating golden file: %v", err)
+		}
+	}
+	expected, err := os.ReadFile(golden)
+	if err != nil {
+		t.Errorf("Failed reading golden file, %v", err)
+	}
+	if !bytes.Equal(actual.Body, expected) {
+		t.Errorf("body expected golden: %s, got: %s", expected, actual.Body)
 	}
 }

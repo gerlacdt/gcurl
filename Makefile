@@ -8,6 +8,9 @@ test:
 
 testv:
 	go test -v ./...
+
+golden:
+	go test ./... -update
 	
 run: 
 	go run main.go
