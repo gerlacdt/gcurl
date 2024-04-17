@@ -1,7 +1,13 @@
-.PHONY: build test testv run clean httpbin
+.PHONY: build errcheck staticcheck test testv run clean httpbin
 
-build:
-	staticcheck ./... && errcheck ./... && go build -o gcurl main.go
+build: errcheck staticcheck
+	go build -o gcurl main.go
+
+errcheck: 
+	errcheck ./...
+
+staticcheck: 
+	staticcheck ./...
 
 test:
 	go test ./...
