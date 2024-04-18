@@ -5,26 +5,12 @@ import (
 	"net/http"
 )
 
-type GetParams struct {
-	Url     string
-	Verbose bool
-	Headers map[string]string
-}
-
-func NewGetParams(url string, verbose bool, headers []string) (GetParams, error) {
-	headerMap, err := getHeaderMap(headers)
-	if err != nil {
-		return GetParams{}, err
-	}
-	return GetParams{Url: url, Verbose: verbose, Headers: headerMap}, nil
-}
-
-func Get(params GetParams) (response Result, err error) {
+func Delete(params GetParams) (response Result, err error) {
 	err = validateUrl(params.Url)
 	if err != nil {
 		return zeroResult(), err
 	}
-	req, err := http.NewRequest("GET", params.Url, nil)
+	req, err := http.NewRequest("DELETE", params.Url, nil)
 	if err != nil {
 		return zeroResult(), err
 	}

@@ -59,6 +59,6 @@ func Post(params PostParams) (result Result, err error) {
 	if err != nil {
 		return zeroResult(), err
 	}
-	result = Result{bodyBytes, resp.Status, resp.Proto, resp.Header, req.Header}
+	result = Result{bodyBytes, resp.Status, resp.Proto, resp.Header, req.Header, req.Method, req.RequestURI}
 	return result, nil
 }

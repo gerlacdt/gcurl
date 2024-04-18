@@ -65,6 +65,20 @@ var rootCmd = &cobra.Command{
 				}
 				response.Print(verbose)
 			}
+		case "DELETE":
+			{
+				params, err := http.NewGetParams(givenUrl, verbose, headers)
+				if err != nil {
+					fmt.Printf("%s\n", err)
+					os.Exit(1)
+				}
+				response, err := http.Delete(params)
+				if err != nil {
+					fmt.Printf("%s\n", err)
+					os.Exit(1)
+				}
+				response.Print(verbose)
+			}
 		default:
 			{
 				fmt.Printf("Invalid HTTP method given, got: %s", method)

@@ -14,6 +14,8 @@ type Result struct {
 	Proto         string
 	Header        map[string][]string
 	RequestHeader map[string][]string
+	RequestMethod string
+	RequestUri    string
 }
 
 func (r *Result) Print(verbose bool) {
@@ -32,7 +34,7 @@ func (r *Result) Print(verbose bool) {
 
 func zeroResult() Result {
 	m := make(map[string][]string)
-	return Result{make([]byte, 0), "", "", m, m}
+	return Result{make([]byte, 0), "", "", m, m, "", ""}
 }
 
 func validateUrl(givenUrl string) error {
