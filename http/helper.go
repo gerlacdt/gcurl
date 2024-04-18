@@ -20,6 +20,7 @@ type Result struct {
 
 func (r *Result) Print(verbose bool) {
 	if verbose {
+		fmt.Fprintf(os.Stderr, "> %s %s\n", r.RequestMethod, r.RequestUri)
 		for reqHeader, reqHeaderValue := range r.RequestHeader {
 			fmt.Fprintf(os.Stderr, "> %s : %s\n", reqHeader, strings.Join(reqHeaderValue, ","))
 		}

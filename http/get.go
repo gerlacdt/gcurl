@@ -45,6 +45,6 @@ func Get(params GetParams) (response Result, err error) {
 		return zeroResult(), err
 	}
 
-	response = Result{bodyBytes, resp.Status, resp.Proto, resp.Header, req.Header, req.Method, req.RequestURI}
+	response = Result{bodyBytes, resp.Status, resp.Proto, resp.Header, req.Header, req.Method, req.URL.EscapedPath()}
 	return response, nil
 }
