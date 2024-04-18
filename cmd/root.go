@@ -51,6 +51,20 @@ var rootCmd = &cobra.Command{
 				}
 				response.Print(verbose)
 			}
+		case "PUT":
+			{
+				params, err := http.NewPostParams(givenUrl, verbose, headers, os.Stdin, body)
+				if err != nil {
+					fmt.Printf("%s\n", err)
+					os.Exit(1)
+				}
+				response, err := http.Put(params)
+				if err != nil {
+					fmt.Printf("%s", err)
+					os.Exit(1)
+				}
+				response.Print(verbose)
+			}
 		default:
 			{
 				fmt.Printf("Invalid HTTP method given, got: %s", method)

@@ -46,3 +46,28 @@ func setDefaultHeaders(r *http.Request) {
 	r.Header.Set("Accept-Encoding", "gzip")
 	r.Header.Set("Host", r.Host)
 }
+
+func getHeaderMap(headers []string) (map[string]string, error) {
+	headerMap := make(map[string]string)
+	var err error
+
+	for _, h := range headers {
+		splitArr := strings.Split(h, ":")
+		if len(splitArr) != 2 {
+			return nil, fmt.Errorf("given invalid header, got: %s", h)
+		}
+		headerKey := splitArr[0]
+		headerValue := splitArr[1]
+		headerMap[headerKey] = headerValue
+	}
+
+	return headerMap, err
+}
+
+func setDefaultHeadersWithBody(r *http.Request) {
+	r.Header.Set("Accept", "application/json")
+	r.Header.Set("User-Agent", "Go-http-client/1.1")
+	r.Header.Set("Accept-Encoding", "gzip")
+	r.Header.Set("Host", r.Host)
+	r.Header.Set("Content-Type", "application/json")
+}

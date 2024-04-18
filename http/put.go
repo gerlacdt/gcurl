@@ -6,23 +6,7 @@ import (
 	"strings"
 )
 
-type PostParams struct {
-	Url     string
-	Verbose bool
-	Headers map[string]string
-	Reader  io.Reader
-	Body    string
-}
-
-func NewPostParams(url string, verbose bool, headers []string, reader io.Reader, body string) (PostParams, error) {
-	headerMap, err := getHeaderMap(headers)
-	if err != nil {
-		return PostParams{}, err
-	}
-	return PostParams{Url: url, Verbose: verbose, Headers: headerMap, Reader: reader, Body: body}, nil
-}
-
-func Post(params PostParams) (result Result, err error) {
+func Put(params PostParams) (result Result, err error) {
 	err = validateUrl(params.Url)
 	if err != nil {
 		return zeroResult(), err
@@ -30,13 +14,13 @@ func Post(params PostParams) (result Result, err error) {
 
 	var req *http.Request
 	if params.Body == "" {
-		req, err = http.NewRequest("POST", params.Url, params.Reader)
+		req, err = http.NewRequest("PUT", params.Url, params.Reader)
 		if err != nil {
 			return zeroResult(), err
 		}
 	} else {
 		bodyReader := strings.NewReader(params.Body)
-		req, err = http.NewRequest("POST", params.Url, bodyReader)
+		req, err = http.NewRequest("PUT", params.Url, bodyReader)
 		if err != nil {
 			return zeroResult(), err
 		}
