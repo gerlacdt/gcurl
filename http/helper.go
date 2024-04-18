@@ -46,7 +46,7 @@ func validateUrl(givenUrl string) error {
 func setDefaultHeaders(r *http.Request) {
 	r.Header.Set("Accept", "application/json")
 	r.Header.Set("User-Agent", "Go-http-client/1.1")
-	r.Header.Set("Accept-Encoding", "gzip")
+	r.Header.Set("Accept-Encoding", "*/*")
 	r.Header.Set("Host", r.Host)
 }
 
@@ -70,7 +70,7 @@ func getHeaderMap(headers []string) (map[string]string, error) {
 func setDefaultHeadersWithBody(r *http.Request) {
 	r.Header.Set("Accept", "application/json")
 	r.Header.Set("User-Agent", "Go-http-client/1.1")
-	r.Header.Set("Accept-Encoding", "gzip")
+	r.Header.Set("Accept-Encoding", "*/*")
 	r.Header.Set("Host", r.Host)
 	r.Header.Set("Content-Type", "application/json")
 }

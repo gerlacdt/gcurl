@@ -2,7 +2,7 @@
   "args": {}, 
   "headers": {
     "Accept": "application/json", 
-    "Accept-Encoding": "gzip", 
+    "Accept-Encoding": "*/*", 
     "Host": "localhost:8080", 
     "User-Agent": "Go-http-client/1.1"
   }, 
