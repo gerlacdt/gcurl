@@ -5,26 +5,31 @@ import (
 	"net/http"
 )
 
-type GetParams struct {
+type Params struct {
+	Method  string
 	Url     string
 	Verbose bool
 	Headers map[string]string
 }
 
-func NewGetParams(url string, verbose bool, headers []string) (GetParams, error) {
+func NewParams(method string, url string, verbose bool, headers []string) (Params, error) {
 	headerMap, err := getHeaderMap(headers)
 	if err != nil {
-		return GetParams{}, err
+		return Params{}, err
 	}
-	return GetParams{Url: url, Verbose: verbose, Headers: headerMap}, nil
+	return Params{Method: method, Url: url, Verbose: verbose, Headers: headerMap}, nil
 }
 
-func Get(params GetParams) (response Result, err error) {
+func Get(params Params) (response Result, err error) {
+	return request(params)
+}
+
+func request(params Params) (response Result, err error) {
 	err = validateUrl(params.Url)
 	if err != nil {
 		return zeroResult(), err
 	}
-	req, err := http.NewRequest("GET", params.Url, nil)
+	req, err := http.NewRequest(params.Method, params.Url, nil)
 	if err != nil {
 		return zeroResult(), err
 	}

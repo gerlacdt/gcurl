@@ -15,11 +15,12 @@ import (
 var update = flag.Bool("update", false, "update golden files")
 
 func TestGet_validRequest_statusCodeOk(t *testing.T) {
+	method := "GET"
 	url := "http://localhost:8080/get"
 	verbose := false
 	headers := make([]string, 0)
 
-	params, err := NewGetParams(url, verbose, headers)
+	params, err := NewParams(method, url, verbose, headers)
 	if err != nil {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
@@ -36,6 +37,7 @@ func TestGet_validRequest_statusCodeOk(t *testing.T) {
 }
 
 func TestGet_validRequest_customHeaderSet(t *testing.T) {
+	method := "GET"
 	url := "http://localhost:8080/get"
 	verbose := false
 	headers := make([]string, 0)
@@ -43,7 +45,7 @@ func TestGet_validRequest_customHeaderSet(t *testing.T) {
 	customHeaderValue := "foobar"
 	headers = append(headers, fmt.Sprintf("%s: %s", customHeaderKey, customHeaderValue))
 
-	params, err := NewGetParams(url, verbose, headers)
+	params, err := NewParams(method, url, verbose, headers)
 	if err != nil {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
@@ -64,11 +66,12 @@ func TestGet_validRequest_customHeaderSet(t *testing.T) {
 }
 
 func TestGet_validRequest_bodyOk(t *testing.T) {
+	method := "GET"
 	url := "http://localhost:8080/get"
 	verbose := false
 	headers := make([]string, 0)
 
-	params, err := NewGetParams(url, verbose, headers)
+	params, err := NewParams(method, url, verbose, headers)
 	if err != nil {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
@@ -88,11 +91,12 @@ func TestGet_validRequest_bodyOk(t *testing.T) {
 }
 
 func TestGet_nonExistingUrl_statusCodeNotFound(t *testing.T) {
+	method := "GET"
 	url := "http://localhost:8080/notexist"
 	verbose := false
 	headers := make([]string, 0)
 
-	params, err := NewGetParams(url, verbose, headers)
+	params, err := NewParams(method, url, verbose, headers)
 	if err != nil {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
@@ -109,12 +113,13 @@ func TestGet_nonExistingUrl_statusCodeNotFound(t *testing.T) {
 }
 
 func TestGet_invalidHeader_fail(t *testing.T) {
+	method := "GET"
 	url := "http://localhost:8080/get"
 	verbose := false
 	headers := make([]string, 1)
 	headers = append(headers, "X-Custom foobar") // missing semicolon delimiter
 
-	_, err := NewGetParams(url, verbose, headers)
+	_, err := NewParams(method, url, verbose, headers)
 	if err == nil {
 		t.Errorf("GetParams should fail but error was nil, %v", err)
 	}
@@ -129,10 +134,11 @@ func TestGet_httpmock_ok(t *testing.T) {
 		httpmock.NewStringResponder(200, `[{"id": 1, "name": "My Great Article"}]`))
 
 	// act
+	method := "GET"
 	url := "https://api.mybiz.com/articles"
 	verbose := false
 	headers := make([]string, 0)
-	params, err := NewGetParams(url, verbose, headers)
+	params, err := NewParams(method, url, verbose, headers)
 	if err != nil {
 		t.Errorf("GETParams creation failed, %v", err)
 	}
@@ -159,10 +165,11 @@ func TestGet_httpmock_ok(t *testing.T) {
 // https://speakerdeck.com/mitchellh/advanced-testing-with-go?slide=20
 func TestGet_goldenFile_ok(t *testing.T) {
 	// arrange
+	method := "GET"
 	url := "http://localhost:8080/get"
 	verbose := false
 	headers := make([]string, 0)
-	params, err := NewGetParams(url, verbose, headers)
+	params, err := NewParams(method, url, verbose, headers)
 	if err != nil {
 		t.Errorf("GetParams creation failed, %v", err)
 	}

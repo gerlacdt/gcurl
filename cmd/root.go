@@ -25,7 +25,7 @@ var rootCmd = &cobra.Command{
 		switch method {
 		case "GET":
 			{
-				params, err := http.NewGetParams(givenUrl, verbose, headers)
+				params, err := http.NewParams("GET", givenUrl, verbose, headers)
 				if err != nil {
 					fmt.Printf("%s\n", err)
 					os.Exit(1)
@@ -67,7 +67,7 @@ var rootCmd = &cobra.Command{
 			}
 		case "DELETE":
 			{
-				params, err := http.NewGetParams(givenUrl, verbose, headers)
+				params, err := http.NewParams("DELETE", givenUrl, verbose, headers)
 				if err != nil {
 					fmt.Printf("%s\n", err)
 					os.Exit(1)
