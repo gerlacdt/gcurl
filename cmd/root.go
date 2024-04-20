@@ -39,7 +39,7 @@ var rootCmd = &cobra.Command{
 			}
 		case "POST":
 			{
-				params, err := http.NewPostParams(givenUrl, verbose, headers, os.Stdin, body)
+				params, err := http.NewParamsWithBody("POST", givenUrl, verbose, headers, os.Stdin, body)
 				if err != nil {
 					fmt.Printf("%s\n", err)
 					os.Exit(1)
@@ -53,7 +53,7 @@ var rootCmd = &cobra.Command{
 			}
 		case "PUT":
 			{
-				params, err := http.NewPostParams(givenUrl, verbose, headers, os.Stdin, body)
+				params, err := http.NewParamsWithBody("PUT", givenUrl, verbose, headers, os.Stdin, body)
 				if err != nil {
 					fmt.Printf("%s\n", err)
 					os.Exit(1)

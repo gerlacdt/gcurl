@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -13,6 +14,9 @@ type Params struct {
 }
 
 func NewParams(method string, url string, verbose bool, headers []string) (Params, error) {
+	if method != "GET" && method != "DELETE" {
+		return Params{}, fmt.Errorf("invalid method given: %s", method)
+	}
 	headerMap, err := getHeaderMap(headers)
 	if err != nil {
 		return Params{}, err

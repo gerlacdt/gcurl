@@ -1,28 +1,40 @@
 package http
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
 )
 
-type PostParams struct {
-	Url     string
-	Verbose bool
-	Headers map[string]string
-	Reader  io.Reader
-	Body    string
+type ParamsWithBody struct {
+	Params
+	Reader io.Reader
+	Body   string
 }
 
-func NewPostParams(url string, verbose bool, headers []string, reader io.Reader, body string) (PostParams, error) {
+func NewParamsWithBody(method string, url string, verbose bool, headers []string, reader io.Reader, body string) (ParamsWithBody, error) {
+	if method != "POST" && method != "PUT" {
+		return ParamsWithBody{}, fmt.Errorf("invalid method given: %s", method)
+	}
 	headerMap, err := getHeaderMap(headers)
 	if err != nil {
-		return PostParams{}, err
+		return ParamsWithBody{}, err
 	}
-	return PostParams{Url: url, Verbose: verbose, Headers: headerMap, Reader: reader, Body: body}, nil
+	return ParamsWithBody{Params: Params{Method: method,
+		Url:     url,
+		Verbose: verbose,
+		Headers: headerMap,
+	},
+		Reader: reader,
+		Body:   body}, nil
 }
 
-func Post(params PostParams) (result Result, err error) {
+func Post(params ParamsWithBody) (result Result, err error) {
+	return requestWithBody(params)
+}
+
+func requestWithBody(params ParamsWithBody) (result Result, err error) {
 	err = validateUrl(params.Url)
 	if err != nil {
 		return zeroResult(), err
@@ -30,13 +42,13 @@ func Post(params PostParams) (result Result, err error) {
 
 	var req *http.Request
 	if params.Body == "" {
-		req, err = http.NewRequest("POST", params.Url, params.Reader)
+		req, err = http.NewRequest(params.Method, params.Url, params.Reader)
 		if err != nil {
 			return zeroResult(), err
 		}
 	} else {
 		bodyReader := strings.NewReader(params.Body)
-		req, err = http.NewRequest("POST", params.Url, bodyReader)
+		req, err = http.NewRequest(params.Method, params.Url, bodyReader)
 		if err != nil {
 			return zeroResult(), err
 		}

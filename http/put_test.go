@@ -8,13 +8,14 @@ import (
 )
 
 func TestPut_validRequestFromInputStream_bodyOk(t *testing.T) {
+	method := "PUT"
 	url := "http://localhost:8080/put"
 	verbose := false
 	headers := make([]string, 0)
 	reader := strings.NewReader("\"foo\": \"bar\"")
-	params, err := NewPostParams(url, verbose, headers, reader, "")
+	params, err := NewParamsWithBody(method, url, verbose, headers, reader, "")
 	if err != nil {
-		t.Errorf("creatin PostParams failed, %v", err)
+		t.Errorf("creatin ParamsWithBody failed, %v", err)
 	}
 
 	actual, err := Put(params)
@@ -30,13 +31,14 @@ func TestPut_validRequestFromInputStream_bodyOk(t *testing.T) {
 }
 
 func TestPut_validRequestFromArgs_bodyOk(t *testing.T) {
+	method := "PUT"
 	url := "http://localhost:8080/put"
 	verbose := false
 	headers := make([]string, 0)
 	requestBody := "\"foo\": \"bar\""
-	params, err := NewPostParams(url, verbose, headers, os.Stdin, requestBody) // body should take precedence
+	params, err := NewParamsWithBody(method, url, verbose, headers, os.Stdin, requestBody) // body should take precedence
 	if err != nil {
-		t.Errorf("creatin PostParams failed, %v", err)
+		t.Errorf("creating ParamsWithBody failed, %v", err)
 	}
 
 	actual, err := Put(params)
@@ -52,6 +54,7 @@ func TestPut_validRequestFromArgs_bodyOk(t *testing.T) {
 }
 
 func TestPut_customHeader_customHeaderSet(t *testing.T) {
+	method := "PUT"
 	url := "http://localhost:8080/put"
 	verbose := false
 	headers := make([]string, 0)
@@ -59,9 +62,9 @@ func TestPut_customHeader_customHeaderSet(t *testing.T) {
 	customHeaderValue := "mycustomheader"
 	headers = append(headers, fmt.Sprintf("%s: %s", customHeaderKey, customHeaderValue))
 	reader := strings.NewReader("\"foo\": \"bar\"")
-	params, err := NewPostParams(url, verbose, headers, reader, "")
+	params, err := NewParamsWithBody(method, url, verbose, headers, reader, "")
 	if err != nil {
-		t.Errorf("creatin PostParams failed, %v", err)
+		t.Errorf("creatin ParamsWithBody failed, %v", err)
 	}
 
 	actual, err := Put(params)
@@ -81,13 +84,14 @@ func TestPut_customHeader_customHeaderSet(t *testing.T) {
 }
 
 func TestPut_validRequest_StatusCodeOk(t *testing.T) {
+	method := "PUT"
 	url := "http://localhost:8080/put"
 	verbose := false
 	headers := make([]string, 0)
 	reader := strings.NewReader("\"foo\": \"bar\"")
-	params, err := NewPostParams(url, verbose, headers, reader, "")
+	params, err := NewParamsWithBody(method, url, verbose, headers, reader, "")
 	if err != nil {
-		t.Errorf("creatin PostParams failed, %v", err)
+		t.Errorf("creatin ParamsWithBody failed, %v", err)
 	}
 
 	actual, err := Put(params)
