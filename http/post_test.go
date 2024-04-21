@@ -8,6 +8,7 @@ import (
 )
 
 func TestPost_validRequestFromInputStream_bodyOk(t *testing.T) {
+	client := NewClient()
 	method := "POST"
 	url := "http://localhost:8080/post"
 	verbose := false
@@ -18,7 +19,7 @@ func TestPost_validRequestFromInputStream_bodyOk(t *testing.T) {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}
 
-	actual, err := Post(params)
+	actual, err := client.Post(params)
 	if err != nil {
 		t.Errorf("http POST failed, %v", err)
 	}
@@ -31,6 +32,7 @@ func TestPost_validRequestFromInputStream_bodyOk(t *testing.T) {
 }
 
 func TestPost_validRequestFromArgs_bodyOk(t *testing.T) {
+	client := NewClient()
 	method := "POST"
 	url := "http://localhost:8080/post"
 	verbose := false
@@ -41,7 +43,7 @@ func TestPost_validRequestFromArgs_bodyOk(t *testing.T) {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}
 
-	actual, err := Post(params)
+	actual, err := client.Post(params)
 	if err != nil {
 		t.Errorf("http POST failed, %v", err)
 	}
@@ -54,6 +56,7 @@ func TestPost_validRequestFromArgs_bodyOk(t *testing.T) {
 }
 
 func TestPost_customHeader_customHeaderSet(t *testing.T) {
+	client := NewClient()
 	method := "POST"
 	url := "http://localhost:8080/post"
 	verbose := false
@@ -67,7 +70,7 @@ func TestPost_customHeader_customHeaderSet(t *testing.T) {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}
 
-	actual, err := Post(params)
+	actual, err := client.Post(params)
 	if err != nil {
 		t.Errorf("http POST failed, %v", err)
 	}
@@ -84,6 +87,7 @@ func TestPost_customHeader_customHeaderSet(t *testing.T) {
 }
 
 func TestPost_validRequest_StatusCodeOk(t *testing.T) {
+	client := NewClient()
 	method := "POST"
 	url := "http://localhost:8080/post"
 	verbose := false
@@ -94,7 +98,7 @@ func TestPost_validRequest_StatusCodeOk(t *testing.T) {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}
 
-	actual, err := Post(params)
+	actual, err := client.Post(params)
 	if err != nil {
 		t.Errorf("http POST failed, %v", err)
 	}

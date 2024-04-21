@@ -7,6 +7,7 @@ import (
 )
 
 func TestDelete_validRequest_statusCodeOk(t *testing.T) {
+	client := NewClient()
 	method := "DELETE"
 	url := "http://localhost:8080/delete"
 	verbose := false
@@ -17,7 +18,7 @@ func TestDelete_validRequest_statusCodeOk(t *testing.T) {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
 
-	actual, err := Delete(params)
+	actual, err := client.Delete(params)
 	if err != nil {
 		t.Errorf("http DELETE failed, %v", err)
 	}
@@ -29,6 +30,7 @@ func TestDelete_validRequest_statusCodeOk(t *testing.T) {
 }
 
 func TestDelete_validRequest_customHeaderSet(t *testing.T) {
+	client := NewClient()
 	method := "DELETE"
 	url := "http://localhost:8080/delete"
 	verbose := false
@@ -42,7 +44,7 @@ func TestDelete_validRequest_customHeaderSet(t *testing.T) {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
 
-	actual, err := Delete(params)
+	actual, err := client.Delete(params)
 	if err != nil {
 		t.Errorf("http DELETE failed, %v", err)
 	}

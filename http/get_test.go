@@ -15,6 +15,7 @@ import (
 var update = flag.Bool("update", false, "update golden files")
 
 func TestGet_validRequest_statusCodeOk(t *testing.T) {
+	client := NewClient()
 	method := "GET"
 	url := "http://localhost:8080/get"
 	verbose := false
@@ -25,7 +26,7 @@ func TestGet_validRequest_statusCodeOk(t *testing.T) {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
 
-	actual, err := Get(params)
+	actual, err := client.Get(params)
 	if err != nil {
 		t.Errorf("http GET failed, %v", err)
 	}
@@ -37,6 +38,7 @@ func TestGet_validRequest_statusCodeOk(t *testing.T) {
 }
 
 func TestGet_validRequest_customHeaderSet(t *testing.T) {
+	client := NewClient()
 	method := "GET"
 	url := "http://localhost:8080/get"
 	verbose := false
@@ -50,7 +52,7 @@ func TestGet_validRequest_customHeaderSet(t *testing.T) {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
 
-	actual, err := Get(params)
+	actual, err := client.Get(params)
 	if err != nil {
 		t.Errorf("http GET failed, %v", err)
 	}
@@ -66,6 +68,7 @@ func TestGet_validRequest_customHeaderSet(t *testing.T) {
 }
 
 func TestGet_validRequest_bodyOk(t *testing.T) {
+	client := NewClient()
 	method := "GET"
 	url := "http://localhost:8080/get"
 	verbose := false
@@ -76,7 +79,7 @@ func TestGet_validRequest_bodyOk(t *testing.T) {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
 
-	actual, err := Get(params)
+	actual, err := client.Get(params)
 	if err != nil {
 		t.Errorf("http GET failed, %v", err)
 	}
@@ -91,6 +94,7 @@ func TestGet_validRequest_bodyOk(t *testing.T) {
 }
 
 func TestGet_nonExistingUrl_statusCodeNotFound(t *testing.T) {
+	client := NewClient()
 	method := "GET"
 	url := "http://localhost:8080/notexist"
 	verbose := false
@@ -101,7 +105,7 @@ func TestGet_nonExistingUrl_statusCodeNotFound(t *testing.T) {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
 
-	actual, err := Get(params)
+	actual, err := client.Get(params)
 	if err != nil {
 		t.Errorf("http GET failed, %v", err)
 	}
@@ -127,6 +131,7 @@ func TestGet_invalidHeader_fail(t *testing.T) {
 
 func TestGet_httpmock_ok(t *testing.T) {
 	// arrange
+	client := NewClient()
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
@@ -142,7 +147,7 @@ func TestGet_httpmock_ok(t *testing.T) {
 	if err != nil {
 		t.Errorf("GETParams creation failed, %v", err)
 	}
-	response, err := Get(params)
+	response, err := client.Get(params)
 	if err != nil {
 		t.Errorf("http GET request failed: %v", err)
 	}
@@ -165,6 +170,7 @@ func TestGet_httpmock_ok(t *testing.T) {
 // https://speakerdeck.com/mitchellh/advanced-testing-with-go?slide=20
 func TestGet_goldenFile_ok(t *testing.T) {
 	// arrange
+	client := NewClient()
 	method := "GET"
 	url := "http://localhost:8080/get"
 	verbose := false
@@ -175,7 +181,7 @@ func TestGet_goldenFile_ok(t *testing.T) {
 	}
 
 	// act
-	actual, err := Get(params)
+	actual, err := client.Get(params)
 	if err != nil {
 		t.Errorf("http GET failed, %v", err)
 	}

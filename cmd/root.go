@@ -22,6 +22,8 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		givenUrl := args[0]
 
+		client := http.NewClient()
+
 		switch method {
 		case "GET":
 			{
@@ -30,7 +32,7 @@ var rootCmd = &cobra.Command{
 					fmt.Printf("%s\n", err)
 					os.Exit(1)
 				}
-				response, err := http.Get(params)
+				response, err := client.Get(params)
 				if err != nil {
 					fmt.Printf("%s\n", err)
 					os.Exit(1)
@@ -44,7 +46,7 @@ var rootCmd = &cobra.Command{
 					fmt.Printf("%s\n", err)
 					os.Exit(1)
 				}
-				response, err := http.Post(params)
+				response, err := client.Post(params)
 				if err != nil {
 					fmt.Printf("%s", err)
 					os.Exit(1)
@@ -58,7 +60,7 @@ var rootCmd = &cobra.Command{
 					fmt.Printf("%s\n", err)
 					os.Exit(1)
 				}
-				response, err := http.Put(params)
+				response, err := client.Put(params)
 				if err != nil {
 					fmt.Printf("%s", err)
 					os.Exit(1)
@@ -72,7 +74,7 @@ var rootCmd = &cobra.Command{
 					fmt.Printf("%s\n", err)
 					os.Exit(1)
 				}
-				response, err := http.Delete(params)
+				response, err := client.Delete(params)
 				if err != nil {
 					fmt.Printf("%s\n", err)
 					os.Exit(1)

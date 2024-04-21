@@ -8,6 +8,7 @@ import (
 )
 
 func TestPut_validRequestFromInputStream_bodyOk(t *testing.T) {
+	client := NewClient()
 	method := "PUT"
 	url := "http://localhost:8080/put"
 	verbose := false
@@ -18,7 +19,7 @@ func TestPut_validRequestFromInputStream_bodyOk(t *testing.T) {
 		t.Errorf("creatin ParamsWithBody failed, %v", err)
 	}
 
-	actual, err := Put(params)
+	actual, err := client.Put(params)
 	if err != nil {
 		t.Errorf("http PUT failed, %v", err)
 	}
@@ -31,6 +32,7 @@ func TestPut_validRequestFromInputStream_bodyOk(t *testing.T) {
 }
 
 func TestPut_validRequestFromArgs_bodyOk(t *testing.T) {
+	client := NewClient()
 	method := "PUT"
 	url := "http://localhost:8080/put"
 	verbose := false
@@ -41,7 +43,7 @@ func TestPut_validRequestFromArgs_bodyOk(t *testing.T) {
 		t.Errorf("creating ParamsWithBody failed, %v", err)
 	}
 
-	actual, err := Put(params)
+	actual, err := client.Put(params)
 	if err != nil {
 		t.Errorf("http PUT failed, %v", err)
 	}
@@ -54,6 +56,7 @@ func TestPut_validRequestFromArgs_bodyOk(t *testing.T) {
 }
 
 func TestPut_customHeader_customHeaderSet(t *testing.T) {
+	client := NewClient()
 	method := "PUT"
 	url := "http://localhost:8080/put"
 	verbose := false
@@ -67,7 +70,7 @@ func TestPut_customHeader_customHeaderSet(t *testing.T) {
 		t.Errorf("creatin ParamsWithBody failed, %v", err)
 	}
 
-	actual, err := Put(params)
+	actual, err := client.Put(params)
 	if err != nil {
 		t.Errorf("http PUT failed, %v", err)
 	}
@@ -84,6 +87,7 @@ func TestPut_customHeader_customHeaderSet(t *testing.T) {
 }
 
 func TestPut_validRequest_StatusCodeOk(t *testing.T) {
+	client := NewClient()
 	method := "PUT"
 	url := "http://localhost:8080/put"
 	verbose := false
@@ -94,7 +98,7 @@ func TestPut_validRequest_StatusCodeOk(t *testing.T) {
 		t.Errorf("creatin ParamsWithBody failed, %v", err)
 	}
 
-	actual, err := Put(params)
+	actual, err := client.Put(params)
 	if err != nil {
 		t.Errorf("http PUT failed, %v", err)
 	}
