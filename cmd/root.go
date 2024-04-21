@@ -27,7 +27,8 @@ var rootCmd = &cobra.Command{
 		switch method {
 		case "GET":
 			{
-				params, err := http.NewParams("GET", givenUrl, verbose, headers, nil, "")
+				params, err := http.NewParams(http.ParamsBuilder{
+					Method: "GET", Url: givenUrl, Verbose: verbose, Headers: headers, Reader: nil, Body: ""})
 				if err != nil {
 					fmt.Printf("%s\n", err)
 					os.Exit(1)
@@ -41,7 +42,8 @@ var rootCmd = &cobra.Command{
 			}
 		case "POST":
 			{
-				params, err := http.NewParams("POST", givenUrl, verbose, headers, os.Stdin, body)
+				params, err := http.NewParams(http.ParamsBuilder{
+					Method: "GET", Url: givenUrl, Verbose: verbose, Headers: headers, Reader: os.Stdin, Body: body})
 				if err != nil {
 					fmt.Printf("%s\n", err)
 					os.Exit(1)
@@ -55,7 +57,8 @@ var rootCmd = &cobra.Command{
 			}
 		case "PUT":
 			{
-				params, err := http.NewParams("PUT", givenUrl, verbose, headers, os.Stdin, body)
+				params, err := http.NewParams(http.ParamsBuilder{
+					Method: "GET", Url: givenUrl, Verbose: verbose, Headers: headers, Reader: os.Stdin, Body: body})
 				if err != nil {
 					fmt.Printf("%s\n", err)
 					os.Exit(1)
@@ -69,7 +72,8 @@ var rootCmd = &cobra.Command{
 			}
 		case "DELETE":
 			{
-				params, err := http.NewParams("DELETE", givenUrl, verbose, headers, nil, "")
+				params, err := http.NewParams(http.ParamsBuilder{
+					Method: "GET", Url: givenUrl, Verbose: verbose, Headers: headers, Reader: nil, Body: ""})
 				if err != nil {
 					fmt.Printf("%s\n", err)
 					os.Exit(1)

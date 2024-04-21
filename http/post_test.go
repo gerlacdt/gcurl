@@ -14,7 +14,8 @@ func TestPost_validRequestFromInputStream_bodyOk(t *testing.T) {
 	verbose := false
 	headers := make([]string, 0)
 	reader := strings.NewReader("\"foo\": \"bar\"")
-	params, err := NewParams(method, url, verbose, headers, reader, "")
+	params, err := NewParams(ParamsBuilder{
+		Method: method, Url: url, Verbose: verbose, Headers: headers, Reader: reader, Body: ""})
 	if err != nil {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}
@@ -37,8 +38,10 @@ func TestPost_validRequestFromArgs_bodyOk(t *testing.T) {
 	url := "http://localhost:8080/post"
 	verbose := false
 	headers := make([]string, 0)
+	reader := os.Stdin
 	requestBody := "\"foo\": \"bar\""
-	params, err := NewParams(method, url, verbose, headers, os.Stdin, requestBody) // body should take precedence
+	params, err := NewParams(ParamsBuilder{
+		Method: method, Url: url, Verbose: verbose, Headers: headers, Reader: reader, Body: requestBody}) // body should take precedence
 	if err != nil {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}
@@ -65,7 +68,8 @@ func TestPost_customHeader_customHeaderSet(t *testing.T) {
 	customHeaderValue := "mycustomheader"
 	headers = append(headers, fmt.Sprintf("%s: %s", customHeaderKey, customHeaderValue))
 	reader := strings.NewReader("\"foo\": \"bar\"")
-	params, err := NewParams(method, url, verbose, headers, reader, "")
+	params, err := NewParams(ParamsBuilder{
+		Method: method, Url: url, Verbose: verbose, Headers: headers, Reader: reader, Body: ""})
 	if err != nil {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}
@@ -93,7 +97,8 @@ func TestPost_validRequest_StatusCodeOk(t *testing.T) {
 	verbose := false
 	headers := make([]string, 0)
 	reader := strings.NewReader("\"foo\": \"bar\"")
-	params, err := NewParams(method, url, verbose, headers, reader, "")
+	params, err := NewParams(ParamsBuilder{
+		Method: method, Url: url, Verbose: verbose, Headers: headers, Reader: reader, Body: ""})
 	if err != nil {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}

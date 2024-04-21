@@ -80,20 +80,29 @@ type Params struct {
 	Body    string
 }
 
-func NewParams(method string, url string, verbose bool, headers []string, reader io.Reader, body string) (Params, error) {
-	if method != "POST" && method != "PUT" && method != "GET" && method != "DELETE" {
-		return Params{}, fmt.Errorf("invalid method given: %s", method)
+type ParamsBuilder struct {
+	Method  string
+	Url     string
+	Verbose bool
+	Headers []string
+	Reader  io.Reader
+	Body    string
+}
+
+func NewParams(builder ParamsBuilder) (Params, error) {
+	if builder.Method != "POST" && builder.Method != "PUT" && builder.Method != "GET" && builder.Method != "DELETE" {
+		return Params{}, fmt.Errorf("invalid method given: %s", builder.Method)
 	}
-	headerMap, err := createHeaderMap(headers)
+	headerMap, err := createHeaderMap(builder.Headers)
 	if err != nil {
 		return Params{}, err
 	}
-	return Params{Method: method,
-		Url:     url,
-		Verbose: verbose,
+	return Params{Method: builder.Method,
+		Url:     builder.Url,
+		Verbose: builder.Verbose,
 		Headers: headerMap,
-		Reader:  reader,
-		Body:    body}, nil
+		Reader:  builder.Reader,
+		Body:    builder.Body}, nil
 }
 
 func doRequest(params Params) (result Result, err error) {

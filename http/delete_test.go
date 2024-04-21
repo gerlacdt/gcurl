@@ -13,7 +13,8 @@ func TestDelete_validRequest_statusCodeOk(t *testing.T) {
 	verbose := false
 	headers := make([]string, 0)
 
-	params, err := NewParams(method, url, verbose, headers, nil, "")
+	params, err := NewParams(ParamsBuilder{
+		Method: method, Url: url, Verbose: verbose, Headers: headers, Reader: nil, Body: ""})
 	if err != nil {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
@@ -39,7 +40,8 @@ func TestDelete_validRequest_customHeaderSet(t *testing.T) {
 	customHeaderValue := "foobar"
 	headers = append(headers, fmt.Sprintf("%s: %s", customHeaderKey, customHeaderValue))
 
-	params, err := NewParams(method, url, verbose, headers, nil, "")
+	params, err := NewParams(ParamsBuilder{
+		Method: method, Url: url, Verbose: verbose, Headers: headers, Reader: nil, Body: ""})
 	if err != nil {
 		t.Errorf("GetParams creation failed, %v", err)
 	}
