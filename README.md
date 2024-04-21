@@ -40,6 +40,12 @@ cat files/post_request.json | ./gcurl -X PUT https://reqres.in/api/user
 ## Development
 
 ```bash
+# for using the provided makefile, you need to install some go tools
+go install honnef.co/go/tools/cmd/staticcheck@latest
+go install github.com/kisielk/errcheck@latest
+
+# further you must have a running docker installation (tests require to spin up the httpbin docker image)
+
 # build linux binary
 make
 
