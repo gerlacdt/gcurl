@@ -14,7 +14,7 @@ func TestPost_validRequestFromInputStream_bodyOk(t *testing.T) {
 	verbose := false
 	headers := make([]string, 0)
 	reader := strings.NewReader("\"foo\": \"bar\"")
-	params, err := NewParamsWithBody(method, url, verbose, headers, reader, "")
+	params, err := NewParams(method, url, verbose, headers, reader, "")
 	if err != nil {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}
@@ -38,7 +38,7 @@ func TestPost_validRequestFromArgs_bodyOk(t *testing.T) {
 	verbose := false
 	headers := make([]string, 0)
 	requestBody := "\"foo\": \"bar\""
-	params, err := NewParamsWithBody(method, url, verbose, headers, os.Stdin, requestBody) // body should take precedence
+	params, err := NewParams(method, url, verbose, headers, os.Stdin, requestBody) // body should take precedence
 	if err != nil {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}
@@ -65,7 +65,7 @@ func TestPost_customHeader_customHeaderSet(t *testing.T) {
 	customHeaderValue := "mycustomheader"
 	headers = append(headers, fmt.Sprintf("%s: %s", customHeaderKey, customHeaderValue))
 	reader := strings.NewReader("\"foo\": \"bar\"")
-	params, err := NewParamsWithBody(method, url, verbose, headers, reader, "")
+	params, err := NewParams(method, url, verbose, headers, reader, "")
 	if err != nil {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}
@@ -93,7 +93,7 @@ func TestPost_validRequest_StatusCodeOk(t *testing.T) {
 	verbose := false
 	headers := make([]string, 0)
 	reader := strings.NewReader("\"foo\": \"bar\"")
-	params, err := NewParamsWithBody(method, url, verbose, headers, reader, "")
+	params, err := NewParams(method, url, verbose, headers, reader, "")
 	if err != nil {
 		t.Errorf("creatin PostParams failed, %v", err)
 	}

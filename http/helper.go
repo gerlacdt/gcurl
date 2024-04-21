@@ -61,7 +61,7 @@ func createHeaderMap(headers []string) (map[string]string, error) {
 	return headerMap, err
 }
 
-func setDefaultHeadersWithBody(r *http.Request, withBody bool) {
+func setDefaultHeaders(r *http.Request, withBody bool) {
 	r.Header.Set("Accept", "application/json")
 	r.Header.Set("User-Agent", "Go-http-client/1.1")
 	r.Header.Set("Accept-Encoding", "*/*")
@@ -71,7 +71,7 @@ func setDefaultHeadersWithBody(r *http.Request, withBody bool) {
 	}
 }
 
-type ParamsWithBody struct {
+type Params struct {
 	Method  string
 	Url     string
 	Verbose bool
@@ -80,15 +80,15 @@ type ParamsWithBody struct {
 	Body    string
 }
 
-func NewParamsWithBody(method string, url string, verbose bool, headers []string, reader io.Reader, body string) (ParamsWithBody, error) {
+func NewParams(method string, url string, verbose bool, headers []string, reader io.Reader, body string) (Params, error) {
 	if method != "POST" && method != "PUT" && method != "GET" && method != "DELETE" {
-		return ParamsWithBody{}, fmt.Errorf("invalid method given: %s", method)
+		return Params{}, fmt.Errorf("invalid method given: %s", method)
 	}
 	headerMap, err := createHeaderMap(headers)
 	if err != nil {
-		return ParamsWithBody{}, err
+		return Params{}, err
 	}
-	return ParamsWithBody{Method: method,
+	return Params{Method: method,
 		Url:     url,
 		Verbose: verbose,
 		Headers: headerMap,
@@ -96,7 +96,7 @@ func NewParamsWithBody(method string, url string, verbose bool, headers []string
 		Body:    body}, nil
 }
 
-func requestWithBody(params ParamsWithBody) (result Result, err error) {
+func doRequest(params Params) (result Result, err error) {
 	err = validateUrl(params.Url)
 	if err != nil {
 		return zeroResult(), err
@@ -126,7 +126,7 @@ func requestWithBody(params ParamsWithBody) (result Result, err error) {
 			return zeroResult(), err
 		}
 	}
-	setDefaultHeadersWithBody(req, withBody)
+	setDefaultHeaders(req, withBody)
 	for headerKey, headerValue := range params.Headers {
 		req.Header.Set(headerKey, headerValue)
 	}
