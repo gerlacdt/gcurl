@@ -44,13 +44,6 @@ func validateUrl(givenUrl string) error {
 	return err
 }
 
-func setDefaultHeaders(r *http.Request) {
-	r.Header.Set("Accept", "application/json")
-	r.Header.Set("User-Agent", "Go-http-client/1.1")
-	r.Header.Set("Accept-Encoding", "*/*")
-	r.Header.Set("Host", r.Host)
-}
-
 func createHeaderMap(headers []string) (map[string]string, error) {
 	headerMap := make(map[string]string)
 	var err error
@@ -68,83 +61,39 @@ func createHeaderMap(headers []string) (map[string]string, error) {
 	return headerMap, err
 }
 
-func setDefaultHeadersWithBody(r *http.Request) {
+func setDefaultHeadersWithBody(r *http.Request, withBody bool) {
 	r.Header.Set("Accept", "application/json")
 	r.Header.Set("User-Agent", "Go-http-client/1.1")
 	r.Header.Set("Accept-Encoding", "*/*")
 	r.Header.Set("Host", r.Host)
-	r.Header.Set("Content-Type", "application/json")
+	if withBody {
+		r.Header.Set("Content-Type", "application/json")
+	}
 }
 
-type Params struct {
+type ParamsWithBody struct {
 	Method  string
 	Url     string
 	Verbose bool
 	Headers map[string]string
-}
-
-func NewParams(method string, url string, verbose bool, headers []string) (Params, error) {
-	if method != "GET" && method != "DELETE" {
-		return Params{}, fmt.Errorf("invalid method given: %s", method)
-	}
-	headerMap, err := createHeaderMap(headers)
-	if err != nil {
-		return Params{}, err
-	}
-	return Params{Method: method, Url: url, Verbose: verbose, Headers: headerMap}, nil
-}
-
-func request(params Params) (response Result, err error) {
-	err = validateUrl(params.Url)
-	if err != nil {
-		return zeroResult(), err
-	}
-	req, err := http.NewRequest(params.Method, params.Url, nil)
-	if err != nil {
-		return zeroResult(), err
-	}
-	setDefaultHeaders(req)
-	for headerKey, headerValue := range params.Headers {
-		req.Header.Set(headerKey, headerValue)
-	}
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return zeroResult(), err
-	}
-	defer func() {
-		err = resp.Body.Close()
-	}()
-	bodyBytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return zeroResult(), err
-	}
-
-	response = Result{bodyBytes, resp.Status, resp.Proto, resp.Header, req.Header, req.Method, req.URL.EscapedPath()}
-	return response, nil
-}
-
-type ParamsWithBody struct {
-	Params
-	Reader io.Reader
-	Body   string
+	Reader  io.Reader
+	Body    string
 }
 
 func NewParamsWithBody(method string, url string, verbose bool, headers []string, reader io.Reader, body string) (ParamsWithBody, error) {
-	if method != "POST" && method != "PUT" {
+	if method != "POST" && method != "PUT" && method != "GET" && method != "DELETE" {
 		return ParamsWithBody{}, fmt.Errorf("invalid method given: %s", method)
 	}
 	headerMap, err := createHeaderMap(headers)
 	if err != nil {
 		return ParamsWithBody{}, err
 	}
-	return ParamsWithBody{Params: Params{Method: method,
+	return ParamsWithBody{Method: method,
 		Url:     url,
 		Verbose: verbose,
 		Headers: headerMap,
-	},
-		Reader: reader,
-		Body:   body}, nil
+		Reader:  reader,
+		Body:    body}, nil
 }
 
 func requestWithBody(params ParamsWithBody) (result Result, err error) {
@@ -154,19 +103,30 @@ func requestWithBody(params ParamsWithBody) (result Result, err error) {
 	}
 
 	var req *http.Request
-	if params.Body == "" {
-		req, err = http.NewRequest(params.Method, params.Url, params.Reader)
-		if err != nil {
-			return zeroResult(), err
-		}
-	} else {
+	withBody := false
+	if params.Body != "" {
+		// body is given via argument
+		withBody = true
 		bodyReader := strings.NewReader(params.Body)
 		req, err = http.NewRequest(params.Method, params.Url, bodyReader)
 		if err != nil {
 			return zeroResult(), err
 		}
+	} else if params.Reader != nil {
+		// body is given via STDIN
+		withBody = true
+		req, err = http.NewRequest(params.Method, params.Url, params.Reader)
+		if err != nil {
+			return zeroResult(), err
+		}
+	} else {
+		// no body
+		req, err = http.NewRequest(params.Method, params.Url, nil)
+		if err != nil {
+			return zeroResult(), err
+		}
 	}
-	setDefaultHeadersWithBody(req)
+	setDefaultHeadersWithBody(req, withBody)
 	for headerKey, headerValue := range params.Headers {
 		req.Header.Set(headerKey, headerValue)
 	}
