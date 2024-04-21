@@ -51,7 +51,7 @@ func setDefaultHeaders(r *http.Request) {
 	r.Header.Set("Host", r.Host)
 }
 
-func getHeaderMap(headers []string) (map[string]string, error) {
+func createHeaderMap(headers []string) (map[string]string, error) {
 	headerMap := make(map[string]string)
 	var err error
 
@@ -87,7 +87,7 @@ func NewParams(method string, url string, verbose bool, headers []string) (Param
 	if method != "GET" && method != "DELETE" {
 		return Params{}, fmt.Errorf("invalid method given: %s", method)
 	}
-	headerMap, err := getHeaderMap(headers)
+	headerMap, err := createHeaderMap(headers)
 	if err != nil {
 		return Params{}, err
 	}
@@ -134,7 +134,7 @@ func NewParamsWithBody(method string, url string, verbose bool, headers []string
 	if method != "POST" && method != "PUT" {
 		return ParamsWithBody{}, fmt.Errorf("invalid method given: %s", method)
 	}
-	headerMap, err := getHeaderMap(headers)
+	headerMap, err := createHeaderMap(headers)
 	if err != nil {
 		return ParamsWithBody{}, err
 	}
