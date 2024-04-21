@@ -71,13 +71,13 @@ func setDefaultHeaders(r *http.Request, withBody bool) {
 	}
 }
 
-type Params struct {
-	Method  string
-	Url     string
-	Verbose bool
-	Headers map[string]string
-	Reader  io.Reader
-	Body    string
+type paramsInternal struct {
+	method  string
+	url     string
+	verbose bool
+	headers map[string]string
+	reader  io.Reader
+	body    string
 }
 
 type ParamsBuilder struct {
@@ -89,54 +89,54 @@ type ParamsBuilder struct {
 	Body    string
 }
 
-func NewParams(builder ParamsBuilder) (Params, error) {
+func NewParams(builder ParamsBuilder) (paramsInternal, error) {
 	if builder.Method != "POST" && builder.Method != "PUT" && builder.Method != "GET" && builder.Method != "DELETE" {
-		return Params{}, fmt.Errorf("invalid method given: %s", builder.Method)
+		return paramsInternal{}, fmt.Errorf("invalid method given: %s", builder.Method)
 	}
 	headerMap, err := createHeaderMap(builder.Headers)
 	if err != nil {
-		return Params{}, err
+		return paramsInternal{}, err
 	}
-	return Params{Method: builder.Method,
-		Url:     builder.Url,
-		Verbose: builder.Verbose,
-		Headers: headerMap,
-		Reader:  builder.Reader,
-		Body:    builder.Body}, nil
+	return paramsInternal{method: builder.Method,
+		url:     builder.Url,
+		verbose: builder.Verbose,
+		headers: headerMap,
+		reader:  builder.Reader,
+		body:    builder.Body}, nil
 }
 
-func doRequest(params Params) (result Result, err error) {
-	err = validateUrl(params.Url)
+func doRequest(params paramsInternal) (result Result, err error) {
+	err = validateUrl(params.url)
 	if err != nil {
 		return zeroResult(), err
 	}
 
 	var req *http.Request
 	withBody := false
-	if params.Body != "" {
+	if params.body != "" {
 		// body is given via argument
 		withBody = true
-		bodyReader := strings.NewReader(params.Body)
-		req, err = http.NewRequest(params.Method, params.Url, bodyReader)
+		bodyReader := strings.NewReader(params.body)
+		req, err = http.NewRequest(params.method, params.url, bodyReader)
 		if err != nil {
 			return zeroResult(), err
 		}
-	} else if params.Reader != nil {
+	} else if params.reader != nil {
 		// body is given via STDIN
 		withBody = true
-		req, err = http.NewRequest(params.Method, params.Url, params.Reader)
+		req, err = http.NewRequest(params.method, params.url, params.reader)
 		if err != nil {
 			return zeroResult(), err
 		}
 	} else {
 		// no body
-		req, err = http.NewRequest(params.Method, params.Url, nil)
+		req, err = http.NewRequest(params.method, params.url, nil)
 		if err != nil {
 			return zeroResult(), err
 		}
 	}
 	setDefaultHeaders(req, withBody)
-	for headerKey, headerValue := range params.Headers {
+	for headerKey, headerValue := range params.headers {
 		req.Header.Set(headerKey, headerValue)
 	}
 	client := &http.Client{}
