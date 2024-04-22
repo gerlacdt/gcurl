@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"gerlacdt/gcurl/http"
+	"github.com/gerlacdt/gcurl/http"
 )
 
 var method string

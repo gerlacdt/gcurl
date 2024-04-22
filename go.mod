@@ -1,4 +1,4 @@
-module gerlacdt/gcurl
+module github.com/gerlacdt/gcurl
 
 go 1.22.1
 
